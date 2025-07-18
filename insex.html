@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcolatrice Impasto Pizza (v3 Definitiva)</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        main {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            width: 100%;
+        }
+        @media (max-width: 768px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+        }
+        h2 {
+            font-size: 1.5em;
+            color: #fff;
+            background-color: #a8b89a;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-top: 0;
+            text-align: center;
+        }
+        .input-group {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        label {
+            font-weight: 500;
+        }
+        input[type="number"] {
+            width: 80px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: right;
+            font-size: 1em;
+            background-color: #fffcf2;
+            border: 1px solid #e0cda2;
+        }
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #8a9a5b;
+            box-shadow: 0 0 5px rgba(138, 154, 91, 0.5);
+        }
+        
+        /* --- CSS FIX PER UX --- */
+        .result-group {
+            display: grid;
+            /* Crea una griglia a 3 colonne: etichetta flessibile, valore e unità a larghezza minima */
+            grid-template-columns: 1fr min-content min-content;
+            align-items: center;
+            gap: 15px; /* Aumentato un po' il gap per leggibilità */
+            margin-bottom: 15px;
+        }
+
+        .results-section .value {
+            font-weight: bold;
+            font-size: 1.1em;
+            padding: 8px;
+            border-radius: 5px;
+            background-color: #eef3e8;
+            text-align: right;
+            display: block;
+            /* Allinea il valore a destra nella sua cella di griglia */
+            justify-self: end;
+        }
+        .unit {
+            font-weight: bold;
+            color: #555;
+            white-space: nowrap; /* Previene l'andare a capo dell'unità */
+        }
+    </style>
+</head>
+<body>
+
+<main>
+    <section class="input-section">
+        <h2>INPUT</h2>
+        <div class="input-group">
+            <label for="numPizze">n. pizze</label>
+            <input type="number" id="numPizze" value="3">
+            <span class="unit">-</span>
+        </div>
+        <div class="input-group">
+            <label for="pesoPanetto">peso panetto</label>
+            <input type="number" id="pesoPanetto" value="280">
+            <span class="unit">g</span>
+        </div>
+        <div class="input-group">
+            <label for="idratazione">idratazione</label>
+            <input type="number" id="idratazione" value="65">
+            <span class="unit">%</span>
+        </div>
+        <div class="input-group">
+            <label for="saleLitro">grammi sale su litro</label>
+            <input type="number" id="saleLitro" value="10">
+            <span class="unit">g / litro</span>
+        </div>
+        <div class="input-group">
+            <label for="olioLitro">grammi olio su litro</label>
+            <input type="number" id="olioLitro" value="0">
+            <span class="unit">g / litro</span>
+        </div>
+        <div class="input-group">
+            <label for="oreTotali">ore totali lievitazione</label>
+            <input type="number" id="oreTotali" value="12">
+            <span class="unit">ore</span>
+        </div>
+        <div class="input-group">
+            <label for="oreFrigo">di cui ore in frigorifero</label>
+            <input type="number" id="oreFrigo" value="8">
+            <span class="unit">ore</span>
+        </div>
+        <div class="input-group">
+            <label for="tempAmbiente">temperatura ambiente</label>
+            <input type="number" id="tempAmbiente" value="20">
+            <span class="unit">°C</span>
+        </div>
+        <div class="input-group">
+            <label for="tempFrigo">temperatura frigorifero</label>
+            <input type="number" id="tempFrigo" value="5">
+            <span class="unit">°C</span>
+        </div>
+    </section>
+
+    <section class="results-section">
+        <h2>RISULTATI</h2>
+        <div class="result-group">
+            <label>farina</label>
+            <span id="resFarina" class="value"></span>
+            <span class="unit">g</span>
+        </div>
+        <div class="result-group">
+            <label>acqua</label>
+            <span id="resAcqua" class="value"></span>
+            <span class="unit">g</span>
+        </div>
+        <div class="result-group">
+            <label>sale</label>
+            <span id="resSale" class="value"></span>
+            <span class="unit">g</span>
+        </div>
+        <div class="result-group">
+            <label>olio</label>
+            <span id="resOlio" class="value"></span>
+            <span class="unit">g</span>
+        </div>
+        <div class="result-group">
+            <label>lievito di birra fresco</label>
+            <span id="resLievito" class="value"></span>
+            <span class="unit">g</span>
+        </div>
+        <div class="result-group">
+            <label>peso totale</label>
+            <span id="resPesoTotale" class="value"></span>
+            <span class="unit">g</span>
+        </div>
+        <div class="result-group">
+            <label>W consigliato</label>
+            <span id="resW" class="value"></span>
+            <span class="unit">-</span>
+        </div>
+    </section>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const inputs = document.querySelectorAll('input[type="number"]');
+
+    function calculate() {
+        const numPizze = parseFloat(document.getElementById('numPizze').value) || 0;
+        const pesoPanetto = parseFloat(document.getElementById('pesoPanetto').value) || 0;
+        const idratazione = parseFloat(document.getElementById('idratazione').value) || 0;
+        const saleLitro = parseFloat(document.getElementById('saleLitro').value) || 0;
+        const olioLitro = parseFloat(document.getElementById('olioLitro').value) || 0;
+        const oreTotali = parseFloat(document.getElementById('oreTotali').value) || 1;
+        const oreFrigo = parseFloat(document.getElementById('oreFrigo').value) || 0;
+        const tempAmbiente = parseFloat(document.getElementById('tempAmbiente').value) || 20;
+        const tempFrigo = parseFloat(document.getElementById('tempFrigo').value) || 4;
+
+        const pesoTotale = numPizze * pesoPanetto;
+        const idratazioneDec = idratazione / 100;
+        const saleDec = saleLitro / 1000;
+        const olioDec = olioLitro / 1000;
+
+        const denominatore = 1 + idratazioneDec * (1 + saleDec + olioDec);
+        const farina = pesoTotale / denominatore;
+        const acqua = farina * idratazioneDec;
+        const sale = acqua * saleDec;
+        const olio = acqua * olioDec;
+
+        // --- Calcolo Lievito (Modello v3 - Definitivo e Ricalibrato) ---
+        const oreAmbiente = oreTotali - oreFrigo > 0 ? oreTotali - oreFrigo : 0;
+        const getCoeff = (temp) => Math.pow(1.15, (temp - 10)); 
+        const coeffAmbiente = getCoeff(tempAmbiente);
+        const coeffFrigo = getCoeff(tempFrigo);
+        const maturazionePonderata = (oreAmbiente * coeffAmbiente) + (oreFrigo * coeffFrigo);
+        
+        // ** VALORE CHIAVE RICALIBRATO SUI 3 ESEMPI **
+        // Questo fattore ora produce risultati molto consistenti con la fisica della lievitazione.
+        const fattoreBaseLievito = 102; 
+        
+        const lievito = maturazionePonderata > 0 ? (fattoreBaseLievito * farina / 1000) / maturazionePonderata : 0;
+
+        const wConsigliato = 160 + (oreTotali * 4) + (oreFrigo * 2);
+
+        document.getElementById('resFarina').textContent = farina.toFixed(0);
+        document.getElementById('resAcqua').textContent = acqua.toFixed(0);
+        document.getElementById('resSale').textContent = sale.toFixed(1);
+        document.getElementById('resOlio').textContent = olio > 0 ? olio.toFixed(1) : '-';
+        document.getElementById('resLievito').textContent = lievito > 0 ? lievito.toFixed(2) : '0.00';
+        document.getElementById('resPesoTotale').textContent = pesoTotale.toFixed(0);
+        document.getElementById('resW').textContent = wConsigliato.toFixed(0);
+    }
+
+    inputs.forEach(input => input.addEventListener('input', calculate));
+    calculate();
+});
+</script>
+
+</body>
+</html>
